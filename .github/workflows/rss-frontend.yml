@@ -64,32 +64,28 @@ jobs:
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
   # Build the Docker image
     - name: Build
-        run: |-
+      run: |-
           docker build \
             --tag "855430746673.dkr.ecr.us-east-1.amazonaws.com/matt-oberlies-00000916-/$APP_NAME:rss-frontend-tag" \
-            .
         # Configure Docker to use the gcloud command-line tool as a credential
         # helper for authentication
-      - name: AWS Configure Docker
-        run: |-
+    - name: AWS Configure Docker
+    run: |-
           AWS_ACCESS_KEY=${{ secrets.ECR_ACCESS_KEY }} ECR_SECRET_KEY=${{ secrets.ECR_SECRET_KEY }} aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 855430746673.dkr.ecr.us-east-1.amazonaws.com
-        # Push the Docker image to ECR
-      - name: Publish
-        run: |
+          - name: Publish # Push the Docker image to ECR  
+          run: |-
           docker push "855430746673.dkr.ecr.us-east-1.amazonaws.com/matt-oberlies-00000916-/${{ secrets.APP_NAME }}:rss-front-tag"
-
-    - name: Fill in the new image ID in the Amazon ECS task definition
-      id: task-def
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
-      with:
+          - name: Fill in the new image ID in the Amazon ECS task definition
+    id: task-def
+    uses: aws-actions/amazon-ecs-render-task-definition@v1
+    with:
         task-definition: task-definition.json
         container-name: rss-front-container
         image: ${{ steps.build-image.outputs.image }}
-
-    - name: Deploy Amazon ECS task definition
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      with:
-        task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: sample-app-service
-        cluster: default
-        wait-for-service-stability: true
+         - name:Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+         task-definition: ${{ steps.task-def.outputs.task-definition }}
+         service: sample-app-service
+         cluster: default
+         wait-for-service-stability: true

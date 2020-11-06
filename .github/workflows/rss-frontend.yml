@@ -55,7 +55,7 @@ jobs:
         ECR_REGISTRY: 855430746673.dkr.ecr.us-east-1.amazonaws.com
         ECR_REPOSITORY: rss-frontend
         IMAGE_TAG: ${{ github.sha }}
-	APP_NAME: rss-app
+	APP_NAME: rss-frontend
       run: |
         # Build a docker container and
         # push it to ECR so that it can

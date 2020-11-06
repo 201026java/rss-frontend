@@ -75,7 +75,7 @@ jobs:
           AWS_ACCESS_KEY=${{ secrets.ECR_ACCESS_KEY }} ECR_SECRET_KEY=${{ secrets.ECR_SECRET_KEY }} aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 855430746673.dkr.ecr.us-east-1.amazonaws.com
         # Push the Docker image to ECR
       - name: Publish
-        run: |-
+        run: |
           docker push "855430746673.dkr.ecr.us-east-1.amazonaws.com/matt-oberlies-00000916-/${{ secrets.APP_NAME }}:rss-front-tag"
 
     - name: Fill in the new image ID in the Amazon ECS task definition

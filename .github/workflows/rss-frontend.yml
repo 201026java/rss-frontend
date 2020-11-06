@@ -55,7 +55,7 @@ jobs:
         ECR_REGISTRY: 855430746673.dkr.ecr.us-east-1.amazonaws.com
         ECR_REPOSITORY: rss-frontend
         IMAGE_TAG: ${{ github.sha }}
-	APP_NAME: rss-frontend.yml
+	 
       run: |
         # Build a docker container and
         # push it to ECR so that it can
@@ -77,7 +77,7 @@ jobs:
         # Push the Docker image to ECR
       - name: Publish
         run: |-
-          docker push "855430746673.dkr.ecr.us-east-1.amazonaws.com/matt-oberlies-00000916-/$APP_NAME:rss-front-tag"
+          docker push "855430746673.dkr.ecr.us-east-1.amazonaws.com/matt-oberlies-00000916-/${{ secrets.APP_NAME }}:rss-front-tag"
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def

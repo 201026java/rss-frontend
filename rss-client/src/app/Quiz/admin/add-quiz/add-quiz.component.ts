@@ -146,6 +146,7 @@ export class AddQuizComponent implements OnInit {
               question: result.value.question,
               questionValue: result.value.questionValue,
               correctAnswer: result.value.correctAnswer,
+              correctAnswerNumber: result.value.correctAnswerNumber,
             };
             // Adds only options with not null values
             let i = 1;

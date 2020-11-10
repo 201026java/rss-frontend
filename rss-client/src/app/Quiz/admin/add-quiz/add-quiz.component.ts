@@ -17,6 +17,8 @@ import { UserService } from 'src/app/User/services/user.service';
 export class AddQuizComponent implements OnInit {
   view = 'select';
   subjects;
+  foo = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+  looper = [1, 2]
 
   focusedQuiz = {
     quizId: 0,
@@ -44,6 +46,8 @@ export class AddQuizComponent implements OnInit {
     }
   }
   focusedQuestion;
+
+  
 
   subjectText = '';
   /**
@@ -135,6 +139,7 @@ export class AddQuizComponent implements OnInit {
     } else {
       this.focusedQuestion = question;
     }
+    
     this.modalService
       .open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(
@@ -147,8 +152,8 @@ export class AddQuizComponent implements OnInit {
               questionValue: result.value.questionValue,
               correctAnswer: result.value.correctAnswer,
               correctAnswerNumber: result.value.correctAnswerNumber,
-            };
-            // Adds only options with not null values
+            };    
+            // Adds only options with not null values       
             let i = 1;
             for (let [key, value] of Object.entries(result.value)) {
               if (key[0] == 'o') {
@@ -193,6 +198,16 @@ export class AddQuizComponent implements OnInit {
         }
     );
   }
+
+  /**updateCorrect
+  * @param correctNumber
+  * Takes the number of Correct Answers inputted and updates the number of inputs that can take.
+  */
+ updateCorrect(correctNumber: number) {
+  //Creates the looping array with the size of the correctAnswerNumber
+  this.looper = this.foo.slice(0, correctNumber)
+  
+}
 /**
  * getDismissReason()
  * @param reason

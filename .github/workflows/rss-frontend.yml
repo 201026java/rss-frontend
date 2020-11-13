@@ -43,7 +43,7 @@ jobs:
           # Changing directories works only within the scope of the current step
           cd ./rss-client 
           npm ci
-          # npm run test
+          npm run test
       - name: Upload Code Coverage Report
         uses: actions/upload-artifact@v2
         with:

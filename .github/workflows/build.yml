@@ -30,7 +30,7 @@ jobs:
           docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
   test:
-    name: download github repo to runner
+    name: Run Tests
     runs-on: ubuntu-latest
     steps:
       - name: Setup test environment

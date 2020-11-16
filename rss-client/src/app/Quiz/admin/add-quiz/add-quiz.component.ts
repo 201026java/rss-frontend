@@ -19,7 +19,7 @@ export class AddQuizComponent implements OnInit {
   subjects;
   foo = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
   looper = [1]
-  isATP: boolean;
+  isATP = 0;
 
   focusedQuiz = {
     quizId: 0,
@@ -50,9 +50,9 @@ export class AddQuizComponent implements OnInit {
    * @param : whether the box is checked or not
    * Sets the question to be a multiple answer question or not
    */
-  yesATP(value:boolean) {
+  yesATP(value:number) {
     this.isATP = value;
-    if (this.isATP == false) {
+    if (this.isATP == 0) {
       this.looper = [1]
     }
   }
@@ -165,6 +165,7 @@ export class AddQuizComponent implements OnInit {
               correctAnswer: result.value.correctAnswer,
               correctAnswers: this.focusedQuestion.correctAnswers,
               correctAnswerNumber: result.value.correctAnswerNumber,
+              ATP: this.isATP,
             };    
             // Adds only options with not null values       
             let i = 1;

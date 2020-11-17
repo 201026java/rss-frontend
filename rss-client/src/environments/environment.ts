@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   accountServiceUrlWithZuul: 'http://localhost:9000',
-  evaluationServiceUrlWithZuul: 'http://localhost:8080',
+  evaluationServiceUrlWithZuul: 'http://localhost:9000',
   cartServiceUrlWithZuul: 'http://localhost:9999',
   inventoryServiceUrlWithZuul: 'http://localhost:8989',
   admin: true,

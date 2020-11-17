@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from 'src/app/User/services/user.service';
 import { User } from 'src/app/User/models/user';
+import { Option } from './../../models/option';
 
 @Component({
   selector: 'edit-quiz',
@@ -24,11 +25,25 @@ export class EditQuizComponent implements OnInit {
   focusedQuestion;
   isValid = false;
 
-  newOption:String;
-  options:String [] = []; 
+  newOption:string;
+  options:Option [] = []; 
 
   addOption(){
-    this.options.push(this.newOption);
+    if(this.newOption == null){
+      return;
+    }
+
+    console.log("add option");
+    console.log(this.newOption);
+
+    let m_option = {
+      optid: 0,
+      description: this.newOption,
+      qb: this.focusedQuestion
+    }
+    
+    this.options.push(m_option);
+
     this.newOption = '';
   }
 
@@ -88,6 +103,8 @@ export class EditQuizComponent implements OnInit {
 * */
   submitChanges() {
     //make sure the points that are being submitted match to the total points
+    this.focusedQuestion.options = this.options;
+    this.options = [];
     this.focusedQuiz.quizTotalPoints = this.focusedQuiz.availablePoints;
     this.focusedQuiz.subjectId = this.focusedQuiz.subject.subjectId;
     this.quizService.addQuiz(this.focusedQuiz).subscribe((res) => {console.log(this.quizData.quizTotalPoints);
@@ -127,11 +144,6 @@ export class EditQuizComponent implements OnInit {
         quizId: this.focusedQuiz.quizId,
         questionValue: null,
         options: null,
-        // option1: null,
-        // option2: null,
-        // option3: null,
-        // option4: null,
-        // option5: null,
         quiz: {},
       };
     } else {

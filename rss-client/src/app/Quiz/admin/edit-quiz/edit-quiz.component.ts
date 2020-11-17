@@ -130,7 +130,7 @@ export class EditQuizComponent implements OnInit {
         option3: null,
         option4: null,
         option5: null,
-        correctAnswers: [0],
+        correctAnswers: [],
         quiz: {},
       };
     } else {
@@ -222,7 +222,7 @@ export class EditQuizComponent implements OnInit {
    * Inputs the correct answer into the CorrectAnswerArray at the listed index
    */
   updateCorrectArray(correct: number, index: number) {
-    this.focusedQuestion.correctAnswers[index] = correct;
+    this.focusedQuestion.correctAnswers[index-1] = correct;
   }
 
   /**

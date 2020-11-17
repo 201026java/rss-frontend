@@ -20,6 +20,10 @@ export class AddQuizComponent implements OnInit {
   subjects;
   options:string [] = []; 
   
+  foo = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+  looper = [1]
+  isATP = 0;
+
   focusedQuiz = {
     quizId: 0,
     subject: null,
@@ -54,7 +58,19 @@ export class AddQuizComponent implements OnInit {
       this.isValid = false;
     }
   }
+  /** yesATP ()
+   * @param : whether the box is checked or not
+   * Sets the question to be a multiple answer question or not
+   */
+  yesATP(value:number) {
+    this.isATP = value;
+    if (this.isATP == 0) {
+      this.looper = [1]
+    }
+  }
   focusedQuestion;
+
+  
 
   subjectText = '';
   /**
@@ -144,6 +160,7 @@ export class AddQuizComponent implements OnInit {
     } else {
       this.focusedQuestion = question;
     }
+    
     this.modalService
       .open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(
@@ -177,6 +194,21 @@ export class AddQuizComponent implements OnInit {
             };
 
             console.log(newQuestion.options);
+              correctAnswers: this.focusedQuestion.correctAnswers,
+              correctAnswerNumber: result.value.correctAnswerNumber,
+              ATP: this.isATP,
+            };    
+            // Adds only options with not null values       
+            let i = 1;
+            for (let [key, value] of Object.entries(result.value)) {
+              if (key[0] == 'o') {
+                if (value != null) {
+                  let thisOption = 'option' + i;
+                  newQuestion[thisOption] = value;
+                  i++;
+                }
+              }
+            }
             // Searches question array to see if this question exists
             let index = this.focusedQuiz.questions.indexOf(
               this.focusedQuestion
@@ -213,6 +245,35 @@ export class AddQuizComponent implements OnInit {
           this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         }
     );
+  }
+
+  /**updateCorrect
+  * @param correctNumber
+  * Takes the number of Correct Answers inputted and updates the number of inputs that can take.
+  * Also updating the array of Correct Answers to have the correct size
+  */
+  updateCorrect(correctNumber: number) {
+  //Creates the looping array with the size of the correctAnswerNumber
+    this.looper = this.foo.slice(0, correctNumber)
+    if (this.looper.length > this.focusedQuestion.correctAnswers.length) {
+      let k = this.looper.length - this.focusedQuestion.correctAnswers.length;
+      for (let i = 0; i < k; i++) {
+        this.focusedQuestion.correctAnswers.push(0);
+      }
+    }
+    else {
+      let temp = this.focusedQuestion.correctAnswers.slice(0, correctNumber);
+      this.focusedQuestion.correctAnswers = temp;
+    }
+  
+  }
+  /**updateCorrectArray
+   * @param correct
+   * @param index
+   * Inputs the correct answer into the CorrectAnswerArray at the listed index
+   */
+  updateCorrectArray(correct: number, index: number) {
+    this.focusedQuestion.correctAnswers[index-1] = correct;
   }
 /**
  * getDismissReason()

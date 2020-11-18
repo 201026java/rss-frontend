@@ -1,5 +1,13 @@
 name: CI/CD
-on: push
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - master
+      - github-actions
+  pull_request:
+    types: [opened, synchronize, reopened]
 env:
   ECR_REPOSITORY_PREFIX: ${{ secrets.ECR_REPOSITORY_PREFIX }}
   ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}

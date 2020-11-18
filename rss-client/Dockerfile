@@ -10,7 +10,7 @@ RUN npm install -g @angular/cli
 RUN npm ci && mkdir /app && mv ./node_modules /app
 WORKDIR /app
 COPY . .
-RUN ng build --prod --aot --deploy-url a05ca03ed94f848dfa2d6ef975d395ff-284278107.us-east-1.elb.amazonaws.com/rss/ --base-href /rss/
+RUN ng build --prod --aot --deploy-url /rss/ --base-href /rss/
 
 FROM nginx:alpine as node
 WORKDIR /app

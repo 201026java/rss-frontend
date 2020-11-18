@@ -5,14 +5,12 @@ FROM node:alpine as angular
 COPY package.json package-lock.json ./
 RUN npm install -g npm@7.0.12
 RUN npm install -g @angular/cli
-RUN npm install -g vue
 
 ## Storing node modules on a separate layer will prevent unnecessary npm installs at each build
 RUN npm ci && mkdir /app && mv ./node_modules /app
 WORKDIR /app
 COPY . .
-RUN ng build --prod --aot --deployUrl="a05ca03ed94f848dfa2d6ef975d395ff-284278107.us-east-1.elb.amazonaws.com/rss/"
-
+RUN ng build --prod --aot --deploy-url a05ca03ed94f848dfa2d6ef975d395ff-284278107.us-east-1.elb.amazonaws.com/rss/ --base-href /rss/
 
 FROM nginx:alpine as node
 WORKDIR /app

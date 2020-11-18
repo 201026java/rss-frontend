@@ -27,8 +27,8 @@ jobs:
         run: |
           pwd
           ls
-          # cd ./rss-client
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./rss-client
+          cd ./rss-client
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . #/rss-client
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest

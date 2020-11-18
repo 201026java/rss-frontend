@@ -2,7 +2,6 @@
 FROM node:alpine as angular
 
 ## Install Angular CLI once, use cached layer for future builds
-RUN ls
 COPY package.json package-lock.json ./
 RUN npm install -g npm@7.0.12
 RUN npm install -g @angular/cli

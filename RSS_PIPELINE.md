@@ -1,160 +1,159 @@
-									#######################################
-									=[ Revature Swag Shop Pipeline Build ]=
-									#######################################
+
+#  Revature Swag Shop Pipeline Build =
 
 
-## The purpose of the document is to outline the steps and configuration needed 
-## to reproduce the CI/CD pipeline used in the Revature Swag Shop project.
-##
-## The present file demonstrates the pipeline configuration comprising a
-## set of templates and instructions on how to replicate it, as long as
-## someone provides GitHub and Sonar Cloud credentials.
-##
-## There are stand-alone instructions and in-line comments in the  
-## configuration templates. The document uses the following 
-## .ini-inspired convention structure and is best seen with a text editor 
-## supporting .ini highlighting:
+
+ The purpose of the document is to outline the steps and configuration needed 
+ to reproduce the CI/CD pipeline used in the Revature Swag Shop project.
+
+ The present file demonstrates the pipeline configuration comprising a
+ set of templates and instructions on how to replicate it, as long as
+ someone provides GitHub and Sonar Cloud credentials.
+
+ There are stand-alone instructions '' and in-line comments ';' . The document uses the following 
+ .ini-based convention structure and is best seen with a text editor 
+ supporting .ini highlighting:
 
 
-[ TITLE ]
-## Section Text
-# an in-line comment in a yml script
-[ TITLE.SUBTITLE]
-variable=value 		; or # comment
-variable=[value]	; a value which the user needs to change according to 
+  TITLE 
+ Section Text
+ an in-line comment in a yml script
+  TITLE.SUBTITLE
+variable=value 		; or  comment
+variable= value	; a value which the user needs to change according to 
 									; circumstances
 tab_type=space
 tab_width=2
 
-## NOTE:
-## In relation to file addresses, the convention used here is:
-## Package_root/Project_root/ 
-## e.g.: 
-## Dockerfile resides in project_root, while sonar-project.properties resides 
-## in the package_root
-## e.g.: 
-## rss-evaluation-service/ is package_root, while 
-## rss-evaluation-service/Evaluation is project_root.
+ NOTE:
+ In relation to file addresses, the convention used here is:
+ Package_root/Project_root/ 
+ e.g.: 
+ Dockerfile resides in project_root, while sonar-project.properties resides 
+ in the package_root
+ e.g.: 
+ rss-evaluation-service/ is package_root, while 
+ rss-evaluation-service/Evaluation is project_root.
 
-[ GENERAL_CONFIGURATION ]
-## The project rests on a number of files and environment variables:
+#  GENERAL_CONFIGURATION 
+ The project rests on a number of files and environment variables:
 
-## GitHub Action Workflows 
-##
-## The entire pipeline is defined as a Git Hub "Workflow", which is a list of
-## Yaml-formatted instructions, which are executed on a Linux (Ubuntu) machine
-## hosted by Git Hub, aka "runner machine". There are certain pre-defined 
-## functions or methods, known as "Git Hub Actions" or simply "Actions", 
-## delivered by GitHub or third parties, which deliver workflow actions abstracted 
-## functionality, e.g.
-#### 'uses: actions/checkout@v2'
-####  1     2       3        4
-#### 1 Workflow keyword enabling the inclusion of an action.
-#### 2 Name of creator, actions/* denotes GitHub
-#### 3 One-word name of the action itself
-#### 4 Version, though could be set to 'master', equivalent to 'latest'
-## 
-## In the example above, the function 'actions/checkout@v2' copies your project
-## to the runner server, which in turn executes all of the workflow commands:
-## either via the use of more workflow actions or the issuance of raw linux 
-## commands using '- runs: |' thus:
-## 
-#### - runs: |
-####		linux_command_here 
-####		linux_command2_here ;see any build.yml for details
-##
-## Global environment *secret* variables are instantiated thus '${{secret.Variable}}'
-## They are defined in GitHubAccount>Settings>Secrets. The workflow is recorded as
-## build.yml, residing in 'package_root/.github/workflows/build.yml' for each service.
-## File name is subject to user's discretion, though the convention here is 'build.yml'.
+ GitHub Action Workflows 
 
-## Docker containerization
-##
-## a 'Dockerfile' 
-## residing as a file in **/project_root/Dockefile
-
-## Jacoco Coverage Maven Plugin
-##
-## pom.xml entries , residing in **/project_root
+ The entire pipeline is defined as a Git Hub "Workflow", which is a list of
+ Yaml-formatted instructions, which are executed on a Linux (Ubuntu) machine
+ hosted by Git Hub, aka "runner machine". There are certain pre-defined 
+ functions or methods, known as "Git Hub Actions" or simply "Actions", 
+ delivered by GitHub or third parties, which deliver workflow actions abstracted 
+ functionality, e.g.
+ 'uses: actions/checkout@v2'
+  1     2       3        4
+ 1 Workflow keyword enabling the inclusion of an action.
+ 2 Name of creator, actions/* denotes GitHub
+ 3 One-word name of the action itself
+ 4 Version, though could be set to 'master', equivalent to 'latest'
  
-## Sonar Cloud Code Analysis
-##
-## sonar-project.properties file for Code Analysis in package_root
+ In the example above, the function 'actions/checkout@v2' copies your project
+ to the runner server, which in turn executes all of the workflow commands:
+ either via the use of more workflow actions or the issuance of raw linux 
+ commands using '- runs: |' thus:
+ 
+ - runs: |
+		linux_command_here 
+		linux_command2_here ;see any build.yml for details
+
+ Global environment *secret* variables are instantiated thus '${{secret.Variable}}'
+ They are defined in GitHubAccount>Settings>Secrets. The workflow is recorded as
+ build.yml, residing in 'package_root/.github/workflows/build.yml' for each service.
+ File name is subject to user's discretion, though the convention here is 'build.yml'.
+
+ Docker containerization
+
+ a 'Dockerfile' 
+ residing as a file in **/project_root/Dockefile
+
+ Jacoco Coverage Maven Plugin
+
+ pom.xml entries , residing in **/project_root
+ 
+ Sonar Cloud Code Analysis
+
+ sonar-project.properties file for Code Analysis in package_root
 
 
 
-[ GENERAL_CONFIGURATION.SUMMARY ]
-##  GitHub Actions Workflow
-####  GitHub environment secrets (variables)
-####  Workflow yml configuration files
-##  Docker containers
-##  Jacoco Plugin
-##  Sonar Cloud configuration ('sonar-project.properties' / pom.xml )
+#  GENERAL_CONFIGURATION.SUMMARY 
+#  GitHub Actions Workflow
+  GitHub environment secrets (variables)
+  Workflow yml configuration files
+  Docker containers
+  Jacoco Plugin
+  Sonar Cloud configuration ('sonar-project.properties' / pom.xml )
 
  
-[ GIT_HUB_ACTIONS_WORKFLOW_CONFIGURATION ]
-## This section outlines the secret variables used in the production of the 
-## Git Hub Actions Workflow CI/CD pipeline for the Revature Swagg Shoppe.
-##
-## The APP_NAME and ECR_REPOSITORY_PREFIX are set to 'rss-frontend' as an 
-## exmaple. Those have to change according to the service at hand.
-##
-## The SONAR_TOKEN is generated by Matt Oberlies and is deliberately missing. 
-##
-## Variables below should be read in conjunction with the build.yml file
+#  GIT_HUB_ACTIONS_WORKFLOW_CONFIGURATION 
+ This section outlines the secret variables used in the production of the 
+ Git Hub Actions Workflow CI/CD pipeline for the Revature Swagg Shoppe.
+
+ The APP_NAME and ECR_REPOSITORY_PREFIX are set to 'rss-frontend' as an 
+ exmaple. Those have to change according to the service at hand.
+
+ The SONAR_TOKEN is generated by Matt Oberlies and is deliberately missing. 
+
+ Variables below should be read in conjunction with the build.yml file
 
 
 
-[ GITHUB_VARIABLES ]
-## The Git Hub Workflow relies on the provision of global, environtment 
-## variables, defined as 'secrets'. Github>Settings>secrets>enter_variables
+#  GITHUB_VARIABLES 
+ The Git Hub Workflow relies on the provision of global, environtment 
+ variables, defined as 'secrets'. Github>Settings>secrets>enter_variables
 
-## APPLICATION NAME
-APP_NAME= [APP_NAME]
-## change according to following names
-## rss-evaluation
-## rss-frontend
-## rss-account
-## rss-cart
-## rss-inventory
+# APPLICATION NAME
+APP_NAME=  APP_NAME
+ change according to following names
+ rss-evaluation
+ rss-frontend
+ rss-account
+ rss-cart
+ rss-inventory
 
-## ECR
-## ECR Authentication variables
+ ECR
+ ECR Authentication variables
 
 AWS_REGION=us-east-1
 ECR_ACCESS_KEY_ID= 
 ECR_REGISTRY=855430746673.dkr.ecr.us-east-1.amazonaws.com
 ECR_REPOSITORY_PREFIX=matt-oberlies-00000916
 ECR_SECRET_ACCESS_KEY= 
-# values provided by trainer
+; values provided by trainer
 
-## EKS
-## These are EKS authentication variables.
+ EKS
+ These are EKS authentication variables.
 
 EKS_ACCESS_KEY_ID= 
 EKS_SECRET_ACCESS_KEY= 
-# values provided by trainer
+; values provided by trainer
 
 SONAR_TOKEN= 
-# token provided by trainer
+; token provided by trainer
 
 
 
-[ WORKFLOW ]
-[ WORKFLOW.FRONTEND ]
-## Frontend workflow differs from the backend in that each step 'needs' a
-## previous one to complete successfully. Note that the 'build' and 'test' steps
-## are executed in parallel. The image is built irrespective of the test outcome.
-## Also, given the largely decoupled workflow we have to *upload* the coverage
-## reports artifact produced by NPM at testing stage and *download* it at the 
-## analysis stage. Perhaps one major reason for the workflow structure choice 
-## is for training purposes.
-##
-## NOTE: That this workflow has hard-coded the continer and deployment names at 
-## the bottom.
-##
-## NOTE: file resides in package or project root foler, whichever is outermost: 
-## root/.github/workflows/build.yml
+#  WORKFLOW 
+#  WORKFLOW.FRONTEND 
+ Frontend workflow differs from the backend in that each step 'needs' a
+ previous one to complete successfully. Note that the 'build' and 'test' steps
+ are executed in parallel. The image is built irrespective of the test outcome.
+ Also, given the largely decoupled workflow we have to *upload* the coverage
+ reports artifact produced by NPM at testing stage and *download* it at the 
+ analysis stage. Perhaps one major reason for the workflow structure choice 
+ is for training purposes.
+
+ NOTE: That this workflow has hard-coded the continer and deployment names at 
+ the bottom.
+
+ NOTE: file resides in package or project root foler, whichever is outermost: 
+ root/.github/workflows/build.yml
 
 name: CI/CD
 on: push
@@ -168,7 +167,7 @@ jobs:
     name: Build Image
     runs-on: ubuntu-latest
     steps:
-      # ---[ Configuring AWS credentials and Logging in to ECR ]---
+       ---  Configuring AWS credentials and Logging in to ECR ---
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -211,13 +210,13 @@ jobs:
           path: rss-client/coverage/
   analyze:
     name: Analyze Code Quality
-    needs: [test]
+    needs:  test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-				# Shallow clones should be disabled for a better relevancy of analysis
+				 
       - name: Download Code Coverage Report
         uses: actions/download-artifact@v2
         with:
@@ -226,11 +225,11 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
-					# Needed to get PR information, if any
+					 Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   deploy: 
-    # ---[ Use docker image from the build step and deploy on EKS ]---
-    needs: [build, analyze]
+     ---  Use docker image from the build step and deploy on EKS ---
+    needs:  build, analyze
     name: Deploy on EKS
     runs-on: ubuntu-latest
     steps:
@@ -244,9 +243,10 @@ jobs:
           kubectl --namespace default rollout status deploy/rss-frontend-deployment
 
 
-[ WORKFLOW.BACKEND ]
-# Resides again at: package or project root, whichever is outermost, thus:
-# root/.github/workflows/build.yml
+# WORKFLOW.BACKEND 
+Resides again at: package or project root, whichever is outermost, thus:
+root/.github/workflows/build.yml
+
 name: CI/CD
 on: push
 env:
@@ -254,9 +254,9 @@ env:
   ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
   ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_PREFIX }}-${{ secrets.APP_NAME }}
   IMAGE_TAG: ${{ github.sha }}
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   Needed to get PR information, if any
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-	PROJECT_ROOT: [PROJECT_ROOT_FOLDERNAME] 
+	PROJECT_ROOT:  PROJECT_ROOT_FOLDERNAME 
 jobs:
   sonar_maven_build:
     runs-on: ubuntu-latest
@@ -270,13 +270,11 @@ jobs:
           pwd
           ls
           cd ./$PROJECT_ROOT 
-					# we will CD to ./project_root if 
-					# we have package_root/project_root structure
-					mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-				env:
+	mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+	env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      # ---[ Configuring AWS credentials and Logging in to ECR ]---
+       ---  Configuring AWS credentials and Logging in to ECR ---
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -286,22 +284,22 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-     # - name: Checkout
-     #   uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Build the image
         id: docker_build
         run: |
           pwd
           ls
-          cd ./$PROJECT_ROOT #we will CD to ./project_root if we have package_root/project_root structure 
-					#note that obtaining the jar artifact from ./target is from within the Dockerfile
+          cd ./$PROJECT_ROOT we will CD to ./project_root if we have package_root/project_root structure 
+					note that obtaining the jar artifact from ./target is from within the Dockerfile
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
   deploy: 
-    # ---[ Use docker image from the build step and deploy on EKS ]---
-    needs: [sonar_maven_build]
+     ---  Use docker image from the build step and deploy on EKS ---
+    needs:  sonar_maven_build
     name: Deploy on EKS
     runs-on: ubuntu-latest
     steps:
@@ -317,69 +315,69 @@ jobs:
 
 
 
-[ DOCKERFILE ]
-## The dockerfile corresponds to the Workflow at the point where the Workflow 
-## positions the process in the project_root folder 
+ # DOCKERFILE 
+ The dockerfile corresponds to the Workflow at the point where the Workflow 
+ positions the process in the project_root folder 
 
-## NOTE BELOW:
-## CONFIRM ARTIFACT NAME
-## MUST NOT CHANGE IMAGES
-## DOCKERFILE must reside in project root, i.e. rss-evaluation-service/Evaluation/Dockerfile
-### Employ the builder pattern
+ NOTE BELOW:
+ CONFIRM ARTIFACT NAME
+ MUST NOT CHANGE IMAGES
+ DOCKERFILE must reside in project root, i.e. rss-evaluation-service/Evaluation/Dockerfile
+ Employ the builder pattern
 FROM maven:3.6.1-jdk-8 as builder
-### Provide Default Argument
+ Provide Default Argument
 WORKDIR /usr/src/app 
 COPY ./target . 
-## Use only a JRE to run application
+ Use only a JRE to run application
 FROM gcr.io/distroless/java:8
-# FROM openjdk:7
-## Copy Artifact from maven image
+ FROM openjdk:7
+ Copy Artifact from maven image
 WORKDIR /app 
-COPY --from=builder /usr/src/app/[ARTIFACT_NAME].jar /app/app.jar 
-# MUST CONFIRM ARTIFACT NAME! TRY HITHERTO EXISTING PROJECT ARTIFACT NAME
+COPY --from=builder /usr/src/app/ ARTIFACT_NAME.jar /app/app.jar 
+ MUST CONFIRM ARTIFACT NAME! TRY HITHERTO EXISTING PROJECT ARTIFACT NAME
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT  "java", "-jar", "app.jar"
 
 
-[ SONAR_CLOUD ]
-## Important to note that Sonar Cloud functionality requires pre-existing account creation, hence,
-## the SONAR_TOKEN requirement.
+#  SONAR_CLOUD 
+ Important to note that Sonar Cloud functionality requires pre-existing account creation, hence,
+ the SONAR_TOKEN requirement.
 
-[ SONAR_CLOUD.Frontend]
-## Sonar Cloud template configuration
-## VALUES BELOW must persist on the project root in a file named 'sonar-project.properties'
-## File resides in package_root/sonar-project.properties
+ # SONAR_CLOUD.Frontend
+ Sonar Cloud template configuration
+ VALUES BELOW must persist on the project root in a file named 'sonar-project.properties'
+ File resides in package_root/sonar-project.properties
 
-## FILE: sonar-project.properties 
+ FILE: sonar-project.properties 
 sonar.organization=201026java
-# value pre-defined by trainer, Matt
-sonar.projectKey=201026java_[APPLICATION_NAME]-service 
-# value sonar.projectKey must equal sonar.organization+ '_' + APPLICATION_NAME + '-service'
-# Value project_name equivalences to ${{secret.APP_NAME}}, and is pre-agreed with trainer and pre-set by them
-# on their sonarcloud.io account, under the sonar.organization=201026java. Each service is defined in the sonar
-# organization as an independent project.
-#
-sonar.sources=./[PROJECT_ROOT]/src
-# service root folder name
-sonar.exclusions=./[PROJECT_ROOT]/src/test/*
+ value pre-defined by trainer, Matt
+sonar.projectKey=201026java_ APPLICATION_NAME-service 
+ value sonar.projectKey must equal sonar.organization+ '_' + APPLICATION_NAME + '-service'
+ Value project_name equivalences to ${{secret.APP_NAME}}, and is pre-agreed with trainer and pre-set by them
+ on their sonarcloud.io account, under the sonar.organization=201026java. Each service is defined in the sonar
+ organization as an independent project.
+
+sonar.sources=./ PROJECT_ROOT/src
+ service root folder name
+sonar.exclusions=./ PROJECT_ROOT/src/test/*
 sonar.language=java
-sonar.tests=./[PROJECT_ROOT]/src/test/java/com/revature
-sonar.test.inclusions=./[PROJECT_ROOT]/**/test/java/com/revature/*.java, **/src/main/java/**/*.java
-sonar.java.binaries=./[PROJECT_ROOT]
+sonar.tests=./ PROJECT_ROOT/src/test/java/com/revature
+sonar.test.inclusions=./ PROJECT_ROOT/**/test/java/com/revature/*.java, **/src/main/java/**/*.java
+sonar.java.binaries=./ PROJECT_ROOT
 sonar.junit.reportPaths	= ./target/surefire-reports 
-# Comma-delimited list of paths to Surefire XML-format reports.
+ Comma-delimited list of paths to Surefire XML-format reports.
 sonar.jacoco.reportPaths=./target/coverage-reports
-# sonar.sourceEncoding=UTF-8
-# sonar.coverage.jacoco.xmlReportPaths:./target/site/jacoco/jacoco.xml # deprecated
+ sonar.sourceEncoding=UTF-8
+ sonar.coverage.jacoco.xmlReportPaths:./target/site/jacoco/jacoco.xml  deprecated
 
 
 
-[ SONAR_CLOUD_POM.XML_Configuration.Backend ]
-# This configuration pertains only to the backend services.
+#  SONAR_CLOUD_POM.XML_Configuration.Backend 
+ This configuration pertains only to the backend services.
 <properties>
 		<coverage.reports.dir>target/coverage-reports</coverage.reports.dir>
 		<sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-		<sonar.projectKey>201026java_[APPLICATION_NAME]-service</sonar.projectKey>
+		<sonar.projectKey>201026java_ APPLICATION_NAME-service</sonar.projectKey>
 		<sonar.organization>201026java</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<sonar.exclusions>src/**/models/**/*</sonar.exclusions>
@@ -389,10 +387,10 @@ sonar.jacoco.reportPaths=./target/coverage-reports
 
  
 
-[ JACOCO ]
+ # JACOCO 
  
-# Enter the following sections in the project_package/pom.xml
-# Valid for both front- and back- end
+ Enter the following sections in the project_package/pom.xml
+ Valid for both front- and back- end
 			<plugin>
 			<groupId>org.jacoco</groupId>
 			<artifactId>jacoco-maven-plugin</artifactId>
@@ -428,61 +426,60 @@ sonar.jacoco.reportPaths=./target/coverage-reports
 	</properties> 
 
  
-[ MISC ] 
-## Additional information below.
+#  MISC  
 
-[ MISC.rss-inventory_Blockers]
-## Particularly vexing blockers in relation to rss-inventory
+  MISC.rss-inventory_Blockers
+ Particularly vexing blockers in relation to rss-inventory
 
-# Failed to execute goal org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar (default-cli) on project ***-service: Could not find a default branch to fall back on.
+ Failed to execute goal org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar (default-cli) on project ***-service: Could not find a default branch to fall back on.
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>sonar-maven-plugin</artifactId>
 				<version>3.0.2</version>
 			</plugin>
 
-# ABout having to provide compiled java classes, i.e. binaries
+ ABout having to provide compiled java classes, i.e. binaries
 <sonar.java.binaries>target</sonar.java.binaries>
 
 
-# COPY failed: stat /var/lib/docker/overlay2/f722d0e9854e772fe546d5bbdd35084fda661005cd3147c667a9018199ac8cf5/merged/usr/src/app/***-service-0.0.1-SNAPSHOT.jar: no such file or directory
+ COPY failed: stat /var/lib/docker/overlay2/f722d0e9854e772fe546d5bbdd35084fda661005cd3147c667a9018199ac8cf5/merged/usr/src/app/***-service-0.0.1-SNAPSHOT.jar: no such file or directory
 
 
-# SOLUTION: MUST USE THIS:
-# mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+ SOLUTION: MUST USE THIS:
+ mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
 
 
-[ MISC.GIT_REBASE ]
+# MISC.GIT_REBASE 
 # Git Rebase instructions for reference
-#
-# open vs code
-# open project folder
-# start gitbash terminal
 
-git log #copy base commit's HASH (SHA)
-# q exits
-#
+ open vs code
+ open project folder
+ start gitbash terminal
+
+git log copy base commit's HASH (SHA)
+ q exits
+
 git rebase -i base_commit_hash
-# use comamnds from bottom of screen by changing the keyword at start of each
-# line
-# * opens gitbash rebase editor *
-# /!\ The effects of the rebase on the commits history will affect all commits 
-# after the base commit
-#
-# Commands:
-# fixup   #to squash/fixup the commit with effective changes maintaned, wihtout
-#         #re-issuing -m "commit messages"
-#         #note: start bottom to top (top oldest bottom most recent)
-# pickup  #keeps commit intact
-# drop    #deletes commit  
-#
-# Modes:
-# (default) -- NO indicator
-# i 	    #enter insert mode - use this to manipulate text
-# esc     #leave mode
-# v		    #visual mode , can highlight 
-# c 	    #changes highlighted text into something else
-# dot     #repeats previous action under command mode
-#
+ use comamnds from bottom of screen by changing the keyword at start of each
+ line
+ * opens gitbash rebase editor *
+ /!\ The effects of the rebase on the commits history will affect all commits 
+ after the base commit
+
+ Commands:
+ fixup   ;to squash/fixup the commit with effective changes maintaned, wihtout
+         ;re-issuing -m "commit messages"
+         ;note: start bottom to top (top oldest bottom most recent)
+ pickup  ;keeps commit intact
+ drop    ;deletes commit  
+
+ Modes:
+ (default) -- NO indicator
+ i 	    enter insert mode - use this to manipulate text
+ esc     leave mode
+ v		    visual mode , can highlight 
+ c 	    changes highlighted text into something else
+ dot     repeats previous actoin under command mode
+
 
 
